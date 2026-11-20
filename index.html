@@ -227,7 +227,6 @@
     <p style="margin:0 0 14px"><a class="btn fill" target="_blank" rel="noopener" href="https://woodenathleticfund.com/">Give in Bob’s memory</a></p>
     <p class="muted" style="font-size:14px;margin:0">Please note “In memory of Bob Lewis” in the comments box on the last page.</p>
   </div>
-  <div class="card-foot">With love, the Lewis Family</div>
 </div></div></section>
 
 <!-- ================= PHOTOS ================= -->
@@ -360,7 +359,10 @@ function addPhoto(thumb, full, first, w, h) {
 function loadPhotos(force) {
   if (photosLoaded && !force) return; photosLoaded = true;
   var guests = fetch(ENDPOINT + '?photos=1&v=' + Date.now()).then(function (r) { return r.json(); }).catch(function () { return {}; });
-  var album = fetch('album.json?v=' + Date.now()).then(function (r) { return r.json(); }).catch(function () { return {}; });
+  // Album read live through the backend (about a minute behind Google Photos); album.json is the fallback.
+  var albumJson = function () { return fetch('album.json?v=' + Date.now()).then(function (r) { return r.json(); }).catch(function () { return {}; }); };
+  var album = fetch(ENDPOINT + '?album=1&v=' + Date.now()).then(function (r) { return r.json(); })
+    .then(function (d) { return d && d.photos && d.photos.length ? d : albumJson(); }).catch(albumJson);
   Promise.all([guests, album]).then(function (res) {
     var items = [];
     (res[1].photos || []).forEach(function (p, i) { items.push({ t: p.t || 0, i: i, thumb: p.u + '=w800-h800', full: p.u + '=w2000-h2000', w: p.w, h: p.h }); });
