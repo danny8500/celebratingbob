@@ -80,10 +80,14 @@
   @media (max-width:860px){
     #home.on{grid-template-columns:1fr;grid-template-rows:auto auto}
     .portrait{position:relative;width:auto;height:58vh;min-height:340px;
-       -webkit-mask-image:linear-gradient(180deg,#000 55%,transparent 100%);mask-image:linear-gradient(180deg,#000 55%,transparent 100%)}
+       -webkit-mask-image:linear-gradient(180deg,transparent 0%,#000 16%,#000 55%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0%,#000 16%,#000 55%,transparent 100%)}
     .portrait::after{display:none}
     .info{grid-column:1}
-    .ptitle{display:none}.mtitle{display:block}#home .rule{display:block}
+    .ptitle{position:relative;left:auto;top:auto;width:auto;grid-row:1;padding:64px 20px 0;margin-bottom:-28px}
+    .ptitle .name{font-size:clamp(40px,11vw,56px)}
+    .portrait{grid-row:2;height:56vh !important;top:auto !important}.info{grid-row:3;margin-top:-24px !important}
+    .portrait img{inset:auto 0 0 0 !important;top:-16% !important;height:116% !important;object-position:50% 0 !important}
+    #home .rule{display:none}
     .portrait::after{display:none !important}
     .info{padding:0 24px 48px;margin-top:-70px;position:relative}
     .bar{padding:12px 16px}.brand{display:none}.tabs{justify-content:center;width:100%}.tabs a{padding:8px 8px;font-size:11px;letter-spacing:.12em}
