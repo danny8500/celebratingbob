@@ -111,6 +111,23 @@
   .box{border-top:1px solid #dcdad5;padding-top:32px;margin-top:40px}
   @media (max-width:560px){.dl{grid-template-columns:1fr;gap:4px}.dl dd{margin-bottom:14px}}
 
+  body:not([data-v=home]) .bar{background:#0b0b0b}
+  /* details card (matches the RSVP email) */
+  #details .page{background:#f2f1ee;padding:96px 16px 70px}
+  .card{max-width:620px;margin:0 auto;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+  .card-head{background:#0b0b0b;color:#f2f2f0;text-align:center;padding:40px 28px}
+  .eyebrow{font:400 11px Inter,Arial,sans-serif;letter-spacing:.32em;text-transform:uppercase;color:#a3a3a0}
+  .eyebrow.dark{color:#1c1c1c;margin-bottom:10px}
+  .card-name{font-family:'Cormorant Garamond',serif;font-size:42px;line-height:1.1;margin-top:10px}
+  .card-dates{font-family:'Cormorant Garamond',serif;font-size:18px;color:#c9c9c5;margin-top:8px}
+  .card-body{padding:40px 44px 36px}
+  .card-lede{font-family:'Cormorant Garamond',serif;font-size:20px !important;line-height:1.5 !important;margin:0 0 18px !important;color:#1c1c1c}
+  .rows{width:100%;border-collapse:collapse;border-bottom:1px solid #e6e6e3}
+  .rows th{width:96px;text-align:left;vertical-align:top;padding:14px 0;border-top:1px solid #e6e6e3;font:400 11px/1.9 Inter,Arial,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:#8a8a86}
+  .rows td{padding:14px 0;border-top:1px solid #e6e6e3;font-family:'Cormorant Garamond',serif;font-size:20px;line-height:1.45;color:#1c1c1c}
+  .muted{color:#6d6d6a !important}
+  .card-foot{text-align:center;padding:22px;border-top:1px solid #eee;font:400 12px Inter,Arial,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#8a8a86}
+  @media (max-width:560px){.card-body{padding:30px 22px}.rows th{width:74px;letter-spacing:.14em}.rows td{font-size:18px}.card-name{font-size:36px}}
   /* photos */
   #photos .page{background:var(--bg);color:var(--fg)}
   #photos .sub{color:var(--dim)}
@@ -187,25 +204,30 @@
 </main>
 
 <!-- ================= DETAILS ================= -->
-<section class="view" id="details"><div class="page"><div class="in">
-  <h1>A Celebration of Bob’s Life</h1>
-  <p class="sub">Family, friends and colleagues are welcome to join us in remembering Bob.</p>
-  <dl class="dl">
-    <dt>Date</dt><dd>Tuesday, January 12, 2027</dd>
-    <dt>Time</dt><dd>12:00 PM</dd>
-    <dt>Place</dt><dd><a class="plain" href="https://californiaclub.org/" target="_blank" rel="noopener">The California Club</a><br><a class="plain" href="https://www.google.com/maps/search/?api=1&amp;query=538%20South%20Flower%20Street%2C%20Los%20Angeles%2C%20California%2090071" target="_blank" rel="noopener">538 South Flower Street<br>Los Angeles, California 90071</a></dd>
-    <dt>Parking</dt><dd>Valet on Flower Street at Sixth.</dd>
-    <dt>By Metro</dt><dd>7th Street/Metro Center station is about two blocks away.</dd>
-    <dt>Attire</dt><dd>The Club asks guests to wear collared shirts and slacks; jackets are preferred.
-      No denim, T‑shirts, shorts, athletic shoes or hats.</dd>
-  </dl>
-
-  <div class="box center">
-    <h1 style="font-size:34px">In Lieu of Flowers</h1>
-    <p>Please consider a gift in Bob’s name to the <strong style="font-weight:500">Wooden Athletic Fund at UCLA</strong>.</p>
-    <p><a class="btn fill" target="_blank" rel="noopener" href="https://woodenathleticfund.com/">Give in Bob’s memory</a></p>
-    <p style="font-size:15px;color:var(--muted)">Please note “In memory of Bob Lewis” in the comments box on the last page.</p>
+<section class="view" id="details"><div class="page"><div class="card">
+  <div class="card-head">
+    <div class="eyebrow">In loving memory</div>
+    <div class="card-name">Robert F. Lewis</div>
+    <div class="card-dates">October 14, 1936 – November 16, 2026</div>
   </div>
+  <div class="card-body">
+    <div class="eyebrow dark">A Celebration of Life</div>
+    <p class="card-lede">Family, friends and colleagues are welcome to join us in remembering Bob.</p>
+    <table class="rows">
+      <tr><th>Date</th><td>Tuesday, January 12, 2027</td></tr>
+      <tr><th>Time</th><td>12:00 PM</td></tr>
+      <tr><th>Place</th><td><a class="plain" href="https://californiaclub.org/" target="_blank" rel="noopener">The California Club</a><br><a class="plain muted" href="https://www.google.com/maps/search/?api=1&amp;query=538%20South%20Flower%20Street%2C%20Los%20Angeles%2C%20California%2090071" target="_blank" rel="noopener">538 South Flower Street<br>Los Angeles, California 90071</a></td></tr>
+      <tr><th>Parking</th><td>Valet on Flower Street at Sixth.</td></tr>
+      <tr><th>Metro</th><td>7th Street/Metro Center station is about two blocks away.</td></tr>
+      <tr><th>Attire</th><td>Collared shirts and slacks; jackets preferred.<br><span class="muted">The Club does not permit denim, T&#8209;shirts, shorts, athletic shoes or hats.</span></td></tr>
+    </table>
+
+    <div class="eyebrow dark" style="margin-top:44px">In Lieu of Flowers</div>
+    <p class="card-lede">Please consider a gift in Bob’s name to the Wooden Athletic Fund at UCLA.</p>
+    <p style="margin:0 0 14px"><a class="btn fill" target="_blank" rel="noopener" href="https://woodenathleticfund.com/">Give in Bob’s memory</a></p>
+    <p class="muted" style="font-size:14px;margin:0">Please note “In memory of Bob Lewis” in the comments box on the last page.</p>
+  </div>
+  <div class="card-foot">With love, the Lewis Family</div>
 </div></div></section>
 
 <!-- ================= PHOTOS ================= -->
@@ -272,6 +294,7 @@ var ENDPOINT = 'https://script.google.com/macros/s/AKfycbxHZUaKoPdcI2KJq2LzoYutx
 var VIEWS = ['home', 'details', 'photos', 'obituary'];
 function show() {
   var v = location.hash.slice(1); if (VIEWS.indexOf(v) < 0) v = 'home';
+  document.body.setAttribute('data-v', v);
   VIEWS.forEach(function (id) { document.getElementById(id).classList.toggle('on', id === v); });
   document.querySelectorAll('.tabs a').forEach(function (a) { a.classList.toggle('on', a.dataset.v === v); });
   window.scrollTo(0, 0);
