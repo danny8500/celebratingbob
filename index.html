@@ -45,6 +45,15 @@
   .portrait img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 18%;filter:grayscale(1) contrast(1.06) brightness(.92)}
   .portrait::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(10,10,10,.6),rgba(10,10,10,0) 35%)}
   .info{grid-column:2;position:relative;z-index:1}
+  /* desktop: name sits over the photo; phone keeps it in the text column */
+  .ptitle{position:absolute;z-index:2;left:max(0px,calc(58% - 100vh));width:calc(min(58%,100vh) * .78);bottom:clamp(36px,8vh,80px);text-align:center;
+     text-shadow:0 2px 24px rgba(0,0,0,.85),0 1px 3px rgba(0,0,0,.6)}
+  .ptitle .kicker{color:#d6d6d2}
+  .mtitle{display:none}
+  #home .rule{display:none}
+  #home .info{justify-content:center}
+  .portrait::after{background:linear-gradient(0deg,rgba(10,10,10,.92) 0%,rgba(10,10,10,.55) 22%,rgba(10,10,10,0) 48%) !important}
+
   .info{display:flex;flex-direction:column;justify-content:flex-start;padding:clamp(80px,11vh,120px) 56px 48px}
   .kicker{font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--dim);margin:0}
   .name{font-family:'Cormorant Garamond',serif;font-variant-numeric:lining-nums;font-weight:400;font-size:clamp(46px,5.4vw,78px);line-height:1;margin:14px 0 10px}
@@ -72,6 +81,8 @@
        -webkit-mask-image:linear-gradient(180deg,#000 55%,transparent 100%);mask-image:linear-gradient(180deg,#000 55%,transparent 100%)}
     .portrait::after{display:none}
     .info{grid-column:1}
+    .ptitle{display:none}.mtitle{display:block}#home .rule{display:block}
+    .portrait::after{display:none !important}
     .info{padding:0 24px 48px;margin-top:-70px;position:relative}
     .bar{padding:12px 16px}.brand{display:none}.tabs{justify-content:center;width:100%}.tabs a{padding:8px 8px;font-size:11px;letter-spacing:.12em}
   }
@@ -143,10 +154,17 @@
 <!-- ================= HOME: everything on one screen ================= -->
 <main class="view" id="home">
   <div class="portrait"><img src="images/bob.jpg" alt="Bob Lewis"></div>
-  <div class="info">
+  <div class="ptitle">
     <p class="kicker">In loving memory</p>
     <h1 class="name">Robert F. Lewis</h1>
     <p class="dates">October 14, 1936 — November 16, 2026</p>
+  </div>
+  <div class="info">
+    <div class="mtitle">
+    <p class="kicker">In loving memory</p>
+    <h1 class="name">Robert F. Lewis</h1>
+    <p class="dates">October 14, 1936 — November 16, 2026</p>
+    </div>
     <div class="rule"></div>
     <div class="event">
       <h2>A Celebration of Life</h2>
