@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex"><title>RSVPs · Celebrating Bob</title>
+<style>
+ body{font-family:system-ui,sans-serif;margin:0;padding:24px;color:#1d1d1f;background:#f4f4f5}
+ h1{font-weight:500;margin:0 0 4px} .sum{font-size:20px;margin:8px 0 18px}
+ table{border-collapse:collapse;width:100%;background:#fff} th,td{text-align:left;padding:8px 10px;border-bottom:1px solid #e3e3e6;font-size:15px}
+ th{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:#6b6b70} input,button{font:inherit;padding:8px 10px}
+ a{color:#1f2f5c}
+</style></head><body>
+<h1>Celebration RSVPs</h1>
+<form id="f"><input id="k" type="password" placeholder="Admin key"> <button>Show</button></form>
+<div id="out"></div>
+<script>
+var ENDPOINT = 'https://script.google.com/macros/s/AKfycbxHZUaKoPdcI2KJq2LzoYutxGa2pz6WHH2sCo5xUdu_PR3FZe9gNd827EGJ3_tN_JkKeQ/exec';
+var out = document.getElementById('out'), k = document.getElementById('k');
+k.value = localStorage.getItem('cb-admin') || '';
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function load(){
+  out.textContent = 'Loading…';
+  fetch(ENDPOINT + '?admin=' + encodeURIComponent(k.value)).then(function(r){return r.json();}).then(function(d){
+    if (d.error) { out.textContent = d.error; return; }
+    localStorage.setItem('cb-admin', k.value);
+    var people = d.rows.reduce(function(a,r){return a + (Number(r[3])||0);},0);
+    var h = '<p class="sum"><b>' + people + '</b> people across <b>' + d.rows.length + '</b> RSVPs</p>' +
+      '<p><a href="' + d.sheet + '" target="_blank">Open the sheet</a> · <a href="' + d.folder + '" target="_blank">Open the photo folder</a></p>' +
+      '<table><tr><th>Name</th><th>People</th><th>Email</th><th>Received</th></tr>';
+    d.rows.slice().reverse().forEach(function(r){
+      h += '<tr><td>' + esc(r[1]) + '</td><td>' + esc(r[3]) + '</td><td>' + esc(r[2]) + '</td><td>' + esc(new Date(r[5] || r[0]).toLocaleString()) + '</td></tr>';
+    });
+    out.innerHTML = h + '</table>';
+  }).catch(function(){ out.textContent = 'Could not load.'; });
+}
+document.getElementById('f').onsubmit = function(e){ e.preventDefault(); load(); };
+if (k.value) load();
+</script>
+</body></html>
