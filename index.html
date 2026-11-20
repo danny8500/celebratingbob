@@ -181,12 +181,6 @@
     <button class="btn fill" type="button" data-open="photoModal">Add photos</button>
   </div></div>
   <div class="grid" id="grid">
-    <figure><img src="images/g-young.jpg" alt="Bob as a young man" loading="lazy"></figure>
-    <figure><img src="images/g-links.jpg" alt="Bob on a golf course by the sea" loading="lazy"></figure>
-    <figure><img src="images/g-cooking.jpg" alt="Bob cooking paella" loading="lazy"></figure>
-    <figure><img src="images/g-confetti.jpg" alt="Bob and Jo celebrating in a confetti shower" loading="lazy"></figure>
-    <figure><img src="images/g-garden.jpg" alt="Bob relaxing outdoors" loading="lazy"></figure>
-    <figure><img src="images/g-clock.jpg" alt="Bob smiling at home" loading="lazy"></figure>
   </div>
 </section>
 
@@ -297,11 +291,15 @@ function addPhoto(src, by, first) {
 }
 function loadPhotos() {
   if (photosLoaded) return; photosLoaded = true;
-  fetch(ENDPOINT + '?photos=1').then(function (r) { return r.json(); }).then(function (d) {
-    (d.photos || []).slice().reverse().forEach(function (p) {
-      addPhoto('https://drive.google.com/thumbnail?id=' + encodeURIComponent(p.id) + '&sz=w1600', p.by, true);
+  // Guest uploads (Drive, newest first) above the family album (Google Photos, refreshed hourly into album.json).
+  var guests = fetch(ENDPOINT + '?photos=1').then(function (r) { return r.json(); }).catch(function () { return {}; });
+  var album = fetch('album.json?v=' + Date.now()).then(function (r) { return r.json(); }).catch(function () { return {}; });
+  Promise.all([guests, album]).then(function (res) {
+    (res[0].photos || []).forEach(function (p) {
+      addPhoto('https://drive.google.com/thumbnail?id=' + encodeURIComponent(p.id) + '&sz=w1600', p.by);
     });
-  }).catch(function () { photosLoaded = false; });
+    (res[1].photos || []).forEach(function (p) { addPhoto(p.u + '=w1600', ''); });
+  });
 }
 (function () {
   var pick = document.getElementById('pPick'), file = document.getElementById('pFile'), send = document.getElementById('pSend'),
