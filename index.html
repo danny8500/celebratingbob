@@ -46,13 +46,14 @@
   .portrait::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(10,10,10,.6),rgba(10,10,10,0) 35%)}
   .info{grid-column:2;position:relative;z-index:1}
   /* desktop: name sits over the photo; phone keeps it in the text column */
-  .ptitle{position:absolute;z-index:2;left:max(0px,calc(58% - 100vh));width:calc(min(58%,100vh) * .78);bottom:clamp(36px,8vh,80px);text-align:center;
+  .ptitle{position:absolute;z-index:2;left:max(0px,calc(58% - 100vh));width:calc(min(58%,100vh) * .78);top:clamp(70px,10vh,100px);text-align:center;
      text-shadow:0 2px 24px rgba(0,0,0,.85),0 1px 3px rgba(0,0,0,.6)}
   .ptitle .kicker{color:#d6d6d2}
   .mtitle{display:none}
   #home .rule{display:none}
   #home .info{justify-content:center}
-  .portrait::after{background:linear-gradient(0deg,rgba(10,10,10,.92) 0%,rgba(10,10,10,.55) 22%,rgba(10,10,10,0) 48%) !important}
+  .portrait{top:clamp(150px,24vh,230px) !important}
+  .portrait::after{background:linear-gradient(180deg,var(--bg) 0%,rgba(10,10,10,.5) 12%,rgba(10,10,10,0) 30%),linear-gradient(0deg,rgba(10,10,10,.5),rgba(10,10,10,0) 25%) !important}
 
   .info{display:flex;flex-direction:column;justify-content:flex-start;padding:clamp(80px,11vh,120px) 56px 48px}
   .kicker{font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--dim);margin:0}
