@@ -326,6 +326,8 @@ function loadPhotos(force) {
     items.sort(function (a, b) { return (a.t - b.t) || (a.i - b.i); });   // oldest photo first, by date taken
     grid.innerHTML = ''; nPhotos = 0;
     items.forEach(function (x) { addPhoto(x.thumb, x.full, false, x.w, x.h); });
+    // Warm the browser cache with the first screenfuls so the Photos tab opens instantly.
+    items.slice(0, 30).forEach(function (x) { var im = new Image(); im.decoding = 'async'; im.src = x.thumb; });
   });
 }
 // Date the photo was taken, from its EXIF (lost once the browser resizes it).
@@ -404,6 +406,11 @@ lb.addEventListener('touchend', function (e) { if (tx === null) return; var dx =
   if (Math.abs(dx) > 50) { e.preventDefault(); lbShow(lbI + (dx < 0 ? 1 : -1)); } });
 
 window.addEventListener('hashchange', show); show();
+// Start loading photos quietly once the home page has finished loading (skipped on Data Saver).
+window.addEventListener('load', function () {
+  if (navigator.connection && navigator.connection.saveData) return;
+  (window.requestIdleCallback || function (f) { setTimeout(f, 800); })(function () { loadPhotos(); });
+});
 </script>
 </body>
 </html>
