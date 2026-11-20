@@ -54,6 +54,8 @@
   .event .when{font-family:'Cormorant Garamond',serif;font-size:clamp(25px,2.2vw,32px);margin:0;line-height:1.25}
   .event .where{font-size:16px;margin:12px 0 0;line-height:1.6}
   .event .where span{color:var(--dim)}
+  a.plain{color:inherit;text-decoration:underline;text-decoration-color:rgba(127,127,127,.45);text-underline-offset:3px}
+  a.plain:hover{text-decoration-color:currentColor}
   .actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
   .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;cursor:pointer;
        font-size:12px;letter-spacing:.18em;text-transform:uppercase;padding:14px 22px;border:1px solid var(--fg);background:transparent;color:var(--fg)}
@@ -141,7 +143,7 @@
     <div class="event">
       <h2>A Celebration of Life</h2>
       <p class="when">Tuesday, January 12, 2027<br>12:00 noon</p>
-      <p class="where">The California Club<br><span>538 South Flower Street, Los Angeles</span></p>
+      <p class="where"><a class="plain" href="https://californiaclub.org/" target="_blank" rel="noopener">The California Club</a><br><span><a class="plain" href="https://www.google.com/maps/search/?api=1&amp;query=538%20South%20Flower%20Street%2C%20Los%20Angeles%2C%20California%2090071" target="_blank" rel="noopener">538 South Flower Street, Los Angeles, California 90071</a></span></p>
     </div>
     <div class="actions">
       <button class="btn fill" type="button" data-open="rsvpModal">RSVP</button>
@@ -158,7 +160,7 @@
   <dl class="dl">
     <dt>Date</dt><dd>Tuesday, January 12, 2027</dd>
     <dt>Time</dt><dd>12:00 noon</dd>
-    <dt>Place</dt><dd>The California Club<br>538 South Flower Street<br>Los Angeles, California 90071</dd>
+    <dt>Place</dt><dd><a class="plain" href="https://californiaclub.org/" target="_blank" rel="noopener">The California Club</a><br><a class="plain" href="https://www.google.com/maps/search/?api=1&amp;query=538%20South%20Flower%20Street%2C%20Los%20Angeles%2C%20California%2090071" target="_blank" rel="noopener">538 South Flower Street<br>Los Angeles, California 90071</a></dd>
   </dl>
   <div class="center" style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center">
     <button class="btn fill" type="button" data-open="rsvpModal">RSVP</button>
