@@ -20,7 +20,7 @@
   :root{--bg:#0a0a0a;--fg:#f2f2f0;--dim:#a3a3a0;--line:rgba(255,255,255,.16);--paper:#f7f6f3;--ink:#1c1c1c;--muted:#6d6d6a}
   *{box-sizing:border-box}
   html,body{margin:0;height:100%}
-  body{background:var(--bg);color:var(--fg);font-family:Inter,system-ui,sans-serif;font-weight:300;-webkit-font-smoothing:antialiased}
+  body{font-variant-numeric:lining-nums;font-feature-settings:'lnum' 1;background:var(--bg);color:var(--fg);font-family:Inter,system-ui,sans-serif;font-weight:300;-webkit-font-smoothing:antialiased}
   a{color:inherit}
   button{font:inherit}
 
@@ -47,7 +47,7 @@
   .info{grid-column:2;position:relative;z-index:1}
   .info{display:flex;flex-direction:column;justify-content:flex-start;padding:clamp(80px,11vh,120px) 56px 48px}
   .kicker{font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--dim);margin:0}
-  .name{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(46px,5.4vw,78px);line-height:1;margin:14px 0 10px}
+  .name{font-family:'Cormorant Garamond',serif;font-variant-numeric:lining-nums;font-weight:400;font-size:clamp(46px,5.4vw,78px);line-height:1;margin:14px 0 10px}
   .dates{font-family:'Cormorant Garamond',serif;font-size:clamp(19px,1.7vw,24px);color:#d4d4d0;margin:0}
   .rule{width:56px;height:1px;background:var(--line);margin:clamp(28px,6vh,64px) 0 clamp(24px,4vh,40px)}
   .event h2{font-size:13px;letter-spacing:.3em;color:#e6e6e2 !important;text-transform:uppercase;color:var(--dim);font-weight:400;margin:0 0 14px}
@@ -150,7 +150,7 @@
     <div class="rule"></div>
     <div class="event">
       <h2>A Celebration of Life</h2>
-      <p class="when">Tuesday, January 12, 2027<br>12:00 noon</p>
+      <p class="when">Tuesday, January 12, 2027<br>12:00 PM</p>
       <p class="where"><a class="plain" href="https://californiaclub.org/" target="_blank" rel="noopener">The California Club</a><br><span><a class="plain" href="https://www.google.com/maps/search/?api=1&amp;query=538%20South%20Flower%20Street%2C%20Los%20Angeles%2C%20California%2090071" target="_blank" rel="noopener">538 South Flower Street, Los Angeles, California 90071</a></span></p>
     </div>
     <div class="actions">
@@ -167,7 +167,7 @@
   <p class="sub">Family, friends and colleagues are welcome to join us in remembering Bob.</p>
   <dl class="dl">
     <dt>Date</dt><dd>Tuesday, January 12, 2027</dd>
-    <dt>Time</dt><dd>12:00 noon</dd>
+    <dt>Time</dt><dd>12:00 PM</dd>
     <dt>Place</dt><dd><a class="plain" href="https://californiaclub.org/" target="_blank" rel="noopener">The California Club</a><br><a class="plain" href="https://www.google.com/maps/search/?api=1&amp;query=538%20South%20Flower%20Street%2C%20Los%20Angeles%2C%20California%2090071" target="_blank" rel="noopener">538 South Flower Street<br>Los Angeles, California 90071</a></dd>
     <dt>Parking</dt><dd>Valet on Flower Street at Sixth.</dd>
     <dt>By Metro</dt><dd>7th Street/Metro Center station is about two blocks away.</dd>
@@ -217,7 +217,7 @@
   <form class="sheet" id="rsvpForm" novalidate>
     <button class="x" type="button" data-close aria-label="Close">×</button>
     <h3 id="rT">RSVP</h3>
-    <p class="lede">Tuesday, January 12, 2027 · 12:00 noon · The California Club.<br>Not required, but it helps us plan. Please let us know even if you only think you might come.</p>
+    <p class="lede">Tuesday, January 12, 2027 · 12:00 PM · The California Club.<br>Not required, but it helps us plan. Please let us know even if you only think you might come.</p>
     <div class="field"><label for="rName">Your name</label><input type="text" id="rName" autocomplete="name"></div>
     <div class="field"><label for="rCount">Number of people</label><input type="number" id="rCount" min="1" max="20" value="1" inputmode="numeric"></div>
     <div class="field"><label for="rEmail">Email</label><input type="email" id="rEmail" autocomplete="email"></div>
@@ -312,17 +312,43 @@ function addPhoto(thumb, full, first, w, h) {
   first ? grid.insertBefore(fig, grid.firstChild) : grid.appendChild(fig);
   if (io && thumb.indexOf('data:') !== 0) { img.dataset.src = thumb; io.observe(img); } else img.src = thumb;
 }
-function loadPhotos() {
-  if (photosLoaded) return; photosLoaded = true;
-  // Guest uploads (Drive, newest first) above the family album (Google Photos, refreshed hourly into album.json).
-  var guests = fetch(ENDPOINT + '?photos=1').then(function (r) { return r.json(); }).catch(function () { return {}; });
+function loadPhotos(force) {
+  if (photosLoaded && !force) return; photosLoaded = true;
+  var guests = fetch(ENDPOINT + '?photos=1&v=' + Date.now()).then(function (r) { return r.json(); }).catch(function () { return {}; });
   var album = fetch('album.json?v=' + Date.now()).then(function (r) { return r.json(); }).catch(function () { return {}; });
   Promise.all([guests, album]).then(function (res) {
-    (res[0].photos || []).forEach(function (p) {
-      var d = 'https://drive.google.com/thumbnail?id=' + encodeURIComponent(p.id); addPhoto(d + '&sz=w700', d + '&sz=w2000');
+    var items = [];
+    (res[1].photos || []).forEach(function (p, i) { items.push({ t: p.t || 0, i: i, thumb: p.u + '=w800-h800', full: p.u + '=w2000-h2000', w: p.w, h: p.h }); });
+    (res[0].photos || []).forEach(function (p, i) {
+      var d = 'https://drive.google.com/thumbnail?id=' + encodeURIComponent(p.id);
+      items.push({ t: p.t || 0, i: 1e6 + i, thumb: d + '&sz=w800', full: d + '&sz=w2000' });
     });
-    (res[1].photos || []).forEach(function (p) { addPhoto(p.u + '=w800-h800', p.u + '=w2000-h2000', false, p.w, p.h); });
+    items.sort(function (a, b) { return (a.t - b.t) || (a.i - b.i); });   // oldest photo first, by date taken
+    grid.innerHTML = ''; nPhotos = 0;
+    items.forEach(function (x) { addPhoto(x.thumb, x.full, false, x.w, x.h); });
   });
+}
+// Date the photo was taken, from its EXIF (lost once the browser resizes it).
+function exifDate(file) {
+  return file.slice(0, 256 * 1024).arrayBuffer().then(function (buf) {
+    var v = new DataView(buf), o = 2;
+    if (v.getUint16(0) !== 0xFFD8) return 0;
+    while (o + 4 < v.byteLength) {
+      var mk = v.getUint16(o), len = v.getUint16(o + 2);
+      if (mk === 0xFFE1 && v.getUint32(o + 4) === 0x45786966) {
+        var t = o + 10, le = v.getUint16(t) === 0x4949;
+        var u16 = function (x) { return v.getUint16(x, le); }, u32 = function (x) { return v.getUint32(x, le); };
+        var find = function (ifd, tag) { var n = u16(t + ifd); for (var k = 0; k < n; k++) { var e = t + ifd + 2 + k * 12; if (u16(e) === tag) return e; } return -1; };
+        var ex = find(u32(t + 4), 0x8769); if (ex < 0) return 0;
+        var d = find(u32(ex + 8), 0x9003); if (d < 0) d = find(u32(ex + 8), 0x9004); if (d < 0) return 0;
+        var str = ''; for (var q = 0; q < 19; q++) str += String.fromCharCode(v.getUint8(t + u32(d + 8) + q));
+        var m = str.match(/(\d{4}):(\d\d):(\d\d) (\d\d):(\d\d):(\d\d)/);
+        return m ? Date.UTC(+m[1], m[2] - 1, +m[3], +m[4], +m[5], +m[6]) : 0;
+      }
+      o += 2 + len;
+    }
+    return 0;
+  }).catch(function () { return 0; });
 }
 (function () {
   var pick = document.getElementById('pPick'), file = document.getElementById('pFile'), send = document.getElementById('pSend'),
@@ -351,15 +377,15 @@ function loadPhotos() {
     for (var i = 0; i < files.length; i++) {
       say(msg, 'Uploading ' + (i + 1) + ' of ' + files.length + '…');
       try {
+        var taken = await exifDate(files[i]);
         var data = await shrink(files[i]);
-        var r = await post({ type: 'photo', dataUrl: data });
+        var r = await post({ type: 'photo', dataUrl: data, taken: taken });
         if (r.error) throw new Error(r.error);
-        if (photosLoaded) addPhoto(data, data, true); // otherwise the first visit to Photos fetches it from the server
         done++;
       } catch (err) { say(msg, (err && err.message) || 'Upload failed.', 'err'); }
     }
     pick.disabled = false; file.value = ''; count.textContent = '';
-    if (done) { say(msg, 'Thank you! ' + done + (done === 1 ? ' photo' : ' photos') + ' added. See them on the Photos page.', 'ok'); }
+    if (done) { if (photosLoaded) loadPhotos(true); say(msg, 'Thank you! ' + done + (done === 1 ? ' photo' : ' photos') + ' added. See them on the Photos page.', 'ok'); }
   };
 })();
 
