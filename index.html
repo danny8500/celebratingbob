@@ -25,9 +25,9 @@
   button{font:inherit}
 
   /* ---------- top bar ---------- */
-  .bar{position:fixed;top:0;left:0;right:0;z-index:5;display:flex;align-items:center;justify-content:space-between;
-       padding:16px 28px;background:linear-gradient(rgba(10,10,10,.92),rgba(10,10,10,.75));backdrop-filter:blur(6px)}
-  .brand{font-family:'Cormorant Garamond',serif;font-size:21px;letter-spacing:.04em;text-decoration:none;white-space:nowrap}
+  .bar{position:fixed;top:0;left:0;right:0;z-index:5;display:flex;align-items:center;justify-content:flex-end;
+       padding:16px 28px;background:linear-gradient(rgba(10,10,10,.9),rgba(10,10,10,.55) 60%,rgba(10,10,10,0))}
+
   .tabs{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
   .tabs a{text-decoration:none;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);padding:8px 12px;border-bottom:1px solid transparent}
   .tabs a:hover{color:var(--fg)}
@@ -38,10 +38,13 @@
   .view.on{display:block}
 
   /* home: everything on one screen */
-  #home.on{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);min-height:100vh}
-  .portrait{position:relative;overflow:hidden;background:#000}
-  .portrait img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 22%;filter:grayscale(1) contrast(1.06)}
-  .portrait::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(10,10,10,0) 55%,var(--bg) 100%),linear-gradient(0deg,rgba(10,10,10,.55),rgba(10,10,10,0) 35%)}
+  #home.on{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);min-height:100vh;position:relative}
+  .portrait{position:absolute;top:0;bottom:0;left:0;width:66%;overflow:hidden;
+     -webkit-mask-image:linear-gradient(90deg,#000 0%,#000 38%,rgba(0,0,0,.6) 62%,rgba(0,0,0,.18) 82%,transparent 100%);
+             mask-image:linear-gradient(90deg,#000 0%,#000 38%,rgba(0,0,0,.6) 62%,rgba(0,0,0,.18) 82%,transparent 100%)}
+  .portrait img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:30% 22%;filter:grayscale(1) contrast(1.06) brightness(.92)}
+  .portrait::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(10,10,10,.6),rgba(10,10,10,0) 35%)}
+  .info{grid-column:2;position:relative;z-index:1}
   .info{display:flex;flex-direction:column;justify-content:center;padding:96px 56px 48px}
   .kicker{font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--dim);margin:0}
   .name{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(46px,5.4vw,78px);line-height:1;margin:14px 0 10px}
@@ -59,14 +62,13 @@
   .btn.fill:hover{background:#cfcfcb;border-color:#cfcfcb}
   .btn[disabled]{opacity:.5;cursor:default}
   .note{font-size:13px;color:var(--dim);margin:16px 0 0;line-height:1.6;max-width:420px}
-  .small-links{margin-top:22px;font-size:13px;color:var(--dim)}
-  .small-links a{color:var(--dim);margin-right:16px}
-  .small-links a:hover{color:var(--fg)}
 
   @media (max-width:860px){
     #home.on{grid-template-columns:1fr;grid-template-rows:auto auto}
-    .portrait{height:58vh;min-height:340px}
-    .portrait::after{background:linear-gradient(0deg,var(--bg) 0%,rgba(10,10,10,0) 45%)}
+    .portrait{position:relative;width:auto;height:58vh;min-height:340px;
+       -webkit-mask-image:linear-gradient(180deg,#000 55%,transparent 100%);mask-image:linear-gradient(180deg,#000 55%,transparent 100%)}
+    .portrait::after{display:none}
+    .info{grid-column:1}
     .info{padding:0 24px 48px;margin-top:-70px;position:relative}
     .bar{padding:12px 16px}.brand{display:none}.tabs{justify-content:center;width:100%}.tabs a{padding:8px 8px;font-size:11px;letter-spacing:.12em}
   }
@@ -120,7 +122,6 @@
 <body>
 
 <header class="bar">
-  <a class="brand" href="#home">Robert F. Lewis</a>
   <nav class="tabs">
     <a href="#home" data-v="home">Home</a>
     <a href="#details" data-v="details">Details</a>
@@ -147,7 +148,6 @@
       <button class="btn" type="button" data-open="photoModal">Add photos</button>
     </div>
     <p class="note">An RSVP isn’t required, but it helps us plan. Please let us know even if you only think you might come.</p>
-    <p class="small-links"><a href="#details">Details &amp; directions</a><a href="#photos">See photos</a><a href="#obituary">Read his obituary</a></p>
   </div>
 </main>
 
