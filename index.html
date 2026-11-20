@@ -96,10 +96,16 @@
   #photos .page{background:var(--bg);color:var(--fg)}
   #photos .sub{color:var(--dim)}
   #photos .page .btn.fill{background:var(--fg);color:var(--bg);border-color:var(--fg)}
-  .grid{columns:3 260px;column-gap:10px;max-width:1200px;margin:0 auto;padding:0 16px 60px}
-  .grid figure{margin:0 0 10px;break-inside:avoid;background:#151515}
-  .grid img{display:block;width:100%;height:auto;cursor:zoom-in}
-  .grid figcaption{font-size:12px;color:#8a8a87;padding:6px 8px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));grid-auto-rows:170px;grid-auto-flow:dense;gap:6px;max-width:1240px;margin:0 auto;padding:0 12px 70px}
+  .grid figure{margin:0;overflow:hidden;background:#141414;position:relative}
+  .grid figure.big{grid-column:span 2;grid-row:span 2}
+  .grid figure.tall{grid-row:span 2}
+  .grid figure.wide{grid-column:span 2}
+  .grid img{width:100%;height:100%;object-fit:cover;object-position:50% 28%;display:block;cursor:zoom-in;opacity:0;transform:scale(1.04);
+     filter:grayscale(.35) contrast(1.03);transition:opacity .6s ease,transform .8s ease,filter .5s ease}
+  .grid img.in{opacity:1;transform:scale(1)}
+  .grid figure:hover img{filter:none;transform:scale(1.035)}
+  @media (max-width:560px){.grid{grid-template-columns:repeat(3,1fr);grid-auto-rows:31vw;gap:4px;padding:0 4px 50px}}
 
   /* modals */
   .modal{position:fixed;inset:0;z-index:10;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;padding:16px}
@@ -118,7 +124,10 @@
   .msg.ok{color:#1d6b3a}.msg.err{color:#a3261d}
   .lb{position:fixed;inset:0;background:rgba(0,0,0,.95);display:none;align-items:center;justify-content:center;z-index:11;cursor:zoom-out}
   .lb.on{display:flex}
-  .lb img{max-width:94vw;max-height:92vh}
+  .lb img{max-width:92vw;max-height:88vh;box-shadow:0 10px 60px rgba(0,0,0,.6)}
+  .lb button{position:absolute;top:50%;transform:translateY(-50%);background:none;border:0;color:#fff;font-size:44px;padding:20px;cursor:pointer;opacity:.7}
+  .lb button:hover{opacity:1}.lb .prev{left:6px}.lb .next{right:6px}
+  .lb .cnt{position:absolute;bottom:18px;left:0;right:0;text-align:center;font-size:12px;letter-spacing:.2em;color:#999}
 </style>
 </head>
 <body>
@@ -161,6 +170,12 @@
     <dt>Date</dt><dd>Tuesday, January 12, 2027</dd>
     <dt>Time</dt><dd>12:00 noon</dd>
     <dt>Place</dt><dd><a class="plain" href="https://californiaclub.org/" target="_blank" rel="noopener">The California Club</a><br><a class="plain" href="https://www.google.com/maps/search/?api=1&amp;query=538%20South%20Flower%20Street%2C%20Los%20Angeles%2C%20California%2090071" target="_blank" rel="noopener">538 South Flower Street<br>Los Angeles, California 90071</a></dd>
+    <dt>Parking</dt><dd>Valet at the Club’s entrance on Flower Street at Sixth. Just pull up and the staff will take it from there.
+      The Club lists valet at $4 per half hour for up to 3 hours, plus 10% city parking tax; a tip for the attendants is customary.
+      Public garages nearby include City National Plaza and the 7th + Fig garage.</dd>
+    <dt>By Metro</dt><dd>7th Street/Metro Center station is about two blocks away.</dd>
+    <dt>Attire</dt><dd>The Club asks guests to wear collared shirts and slacks; jackets are preferred.
+      No denim, T‑shirts, shorts, athletic shoes or hats.</dd>
   </dl>
 
   <div class="box center">
@@ -223,13 +238,13 @@
     <input type="file" id="pFile" accept="image/*" multiple hidden>
     <button class="btn" type="button" id="pPick">Choose photos</button>
     <p id="pCount" style="margin:12px 0 0;font-size:14px"></p>
-    <div class="field" style="margin-top:14px"><label for="pName">Your name (optional)</label><input type="text" id="pName" autocomplete="name"></div>
+    <div style="height:14px"></div>
     <button class="btn fill" type="button" id="pSend" disabled>Upload</button>
     <p class="msg" id="pMsg" role="status"></p>
   </div>
 </div>
 
-<div class="lb" id="lb"><img alt=""></div>
+<div class="lb" id="lb"><img alt="" id="lbImg"><button class="prev" type="button" aria-label="Previous">‹</button><button class="next" type="button" aria-label="Next">›</button><div class="cnt" id="lbCnt"></div></div>
 
 <script>
 var ENDPOINT = 'https://script.google.com/macros/s/AKfycbxHZUaKoPdcI2KJq2LzoYutxGa2pz6WHH2sCo5xUdu_PR3FZe9gNd827EGJ3_tN_JkKeQ/exec';
@@ -283,11 +298,22 @@ function say(el, text, kind) { el.textContent = text; el.className = 'msg ' + (k
 
 // ---------- Photos ----------
 var grid = document.getElementById('grid'), photosLoaded = false;
-function addPhoto(src, by, first) {
+var nPhotos = 0;
+var io = 'IntersectionObserver' in window ? new IntersectionObserver(function (es) {
+  es.forEach(function (e) { if (e.isIntersecting) { var i = e.target; i.src = i.dataset.src; io.unobserve(i); } });
+}, { rootMargin: '400px' }) : null;
+function addPhoto(thumb, full, first, w, h) {
   var fig = document.createElement('figure'), img = document.createElement('img');
-  img.src = src; img.alt = by ? 'Photo shared by ' + by : 'Photo of Bob'; img.loading = 'lazy'; fig.appendChild(img);
-  if (by) { var c = document.createElement('figcaption'); c.textContent = 'Shared by ' + by; fig.appendChild(c); }
+  var n = nPhotos++, r = w && h ? w / h : 1, k = '';
+  if (r < 0.82) k = 'tall'; else if (r > 1.3) k = 'wide';
+  if (n % 9 === 4 && k !== 'tall') k = 'big';          // an occasional large feature tile
+  if (k === 'wide' && n % 2) k = '';                   // keep it from being all wide strips
+  if (k) fig.className = k;
+  img.alt = 'Photo of Bob'; img.dataset.full = full; img.decoding = 'async';
+  img.onload = function () { img.classList.add('in'); };
+  fig.appendChild(img);
   first ? grid.insertBefore(fig, grid.firstChild) : grid.appendChild(fig);
+  if (io && thumb.indexOf('data:') !== 0) { img.dataset.src = thumb; io.observe(img); } else img.src = thumb;
 }
 function loadPhotos() {
   if (photosLoaded) return; photosLoaded = true;
@@ -296,9 +322,9 @@ function loadPhotos() {
   var album = fetch('album.json?v=' + Date.now()).then(function (r) { return r.json(); }).catch(function () { return {}; });
   Promise.all([guests, album]).then(function (res) {
     (res[0].photos || []).forEach(function (p) {
-      addPhoto('https://drive.google.com/thumbnail?id=' + encodeURIComponent(p.id) + '&sz=w1600', p.by);
+      var d = 'https://drive.google.com/thumbnail?id=' + encodeURIComponent(p.id); addPhoto(d + '&sz=w700', d + '&sz=w2000');
     });
-    (res[1].photos || []).forEach(function (p) { addPhoto(p.u + '=w1600', ''); });
+    (res[1].photos || []).forEach(function (p) { addPhoto(p.u + '=w800-h800', p.u + '=w2000-h2000', false, p.w, p.h); });
   });
 }
 (function () {
@@ -323,15 +349,15 @@ function loadPhotos() {
     });
   }
   send.onclick = async function () {
-    var files = Array.prototype.slice.call(file.files, 0, 20), name = document.getElementById('pName').value.trim(), done = 0;
+    var files = Array.prototype.slice.call(file.files, 0, 20), done = 0;
     send.disabled = pick.disabled = true;
     for (var i = 0; i < files.length; i++) {
       say(msg, 'Uploading ' + (i + 1) + ' of ' + files.length + '…');
       try {
         var data = await shrink(files[i]);
-        var r = await post({ type: 'photo', name: name, dataUrl: data });
+        var r = await post({ type: 'photo', dataUrl: data });
         if (r.error) throw new Error(r.error);
-        if (photosLoaded) addPhoto(data, name, true); // otherwise the first visit to Photos fetches it from the server
+        if (photosLoaded) addPhoto(data, data, true); // otherwise the first visit to Photos fetches it from the server
         done++;
       } catch (err) { say(msg, (err && err.message) || 'Upload failed.', 'err'); }
     }
@@ -341,9 +367,18 @@ function loadPhotos() {
 })();
 
 // ---------- Lightbox ----------
-var lb = document.getElementById('lb');
-grid.addEventListener('click', function (e) { if (e.target.tagName === 'IMG') { lb.firstChild.src = e.target.src; lb.classList.add('on'); } });
+var lb = document.getElementById('lb'), lbImg = document.getElementById('lbImg'), lbCnt = document.getElementById('lbCnt'), lbI = 0;
+function imgs() { return Array.prototype.slice.call(grid.querySelectorAll('img')); }
+function lbShow(i) { var a = imgs(); lbI = (i + a.length) % a.length; lbImg.src = a[lbI].dataset.full || a[lbI].src; lbCnt.textContent = (lbI + 1) + ' / ' + a.length; lb.classList.add('on'); }
+grid.addEventListener('click', function (e) { if (e.target.tagName === 'IMG') lbShow(imgs().indexOf(e.target)); });
+lb.querySelector('.prev').onclick = function (e) { e.stopPropagation(); lbShow(lbI - 1); };
+lb.querySelector('.next').onclick = function (e) { e.stopPropagation(); lbShow(lbI + 1); };
 lb.onclick = function () { lb.classList.remove('on'); };
+document.addEventListener('keydown', function (e) { if (!lb.classList.contains('on')) return;
+  if (e.key === 'ArrowLeft') lbShow(lbI - 1); if (e.key === 'ArrowRight') lbShow(lbI + 1); });
+var tx = null; lb.addEventListener('touchstart', function (e) { tx = e.touches[0].clientX; }, { passive: true });
+lb.addEventListener('touchend', function (e) { if (tx === null) return; var dx = e.changedTouches[0].clientX - tx; tx = null;
+  if (Math.abs(dx) > 50) { e.preventDefault(); lbShow(lbI + (dx < 0 ? 1 : -1)); } });
 
 window.addEventListener('hashchange', show); show();
 </script>
