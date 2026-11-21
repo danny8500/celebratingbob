@@ -42,7 +42,7 @@
   .portrait{position:absolute;top:0;bottom:0;left:max(0px,calc(58% - 100vh));width:min(58%,100vh);overflow:hidden;
      -webkit-mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.45) 7%,#000 20%,#000 40%,rgba(0,0,0,.8) 52%,rgba(0,0,0,.55) 64%,rgba(0,0,0,.32) 76%,rgba(0,0,0,.14) 88%,transparent 100%);
              mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.45) 7%,#000 20%,#000 40%,rgba(0,0,0,.8) 52%,rgba(0,0,0,.55) 64%,rgba(0,0,0,.32) 76%,rgba(0,0,0,.14) 88%,transparent 100%)}
-  .portrait img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 18%;filter:grayscale(1) contrast(1.06) brightness(.92)}
+  .portrait img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 18%;filter:grayscale(1) brightness(.95)}
   .portrait::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(10,10,10,.6),rgba(10,10,10,0) 35%)}
   .info{grid-column:2;position:relative;z-index:1}
   /* desktop: name sits over the photo; phone keeps it in the text column */
@@ -82,7 +82,7 @@
   #home .mtitle{display:block;margin-bottom:6px}
   #home .rule{display:block}
   .portrait{top:0 !important}
-  .portrait img{object-position:50% 22% !important}
+  .portrait img{object-position:50% 0 !important}
   .portrait::after{background:linear-gradient(180deg,rgba(10,10,10,.7),rgba(10,10,10,0) 16%),linear-gradient(0deg,rgba(10,10,10,.5),rgba(10,10,10,0) 30%) !important}
   @media (max-width:860px){
     #home.on{grid-template-columns:1fr;grid-template-rows:auto auto}
@@ -99,7 +99,7 @@
     #home .note{margin-left:auto;margin-right:auto}
     .portrait{grid-row:2;height:auto !important;aspect-ratio:1/1.05;max-height:62vh;min-height:300px !important;top:auto !important;width:min(100%,calc(62vh / 1.05)) !important;justify-self:center;-webkit-mask-image:linear-gradient(180deg,transparent 0%,#000 16%,#000 55%,transparent 100%),linear-gradient(90deg,transparent 0%,#000 10%,#000 90%,transparent 100%) !important;-webkit-mask-composite:source-in;mask-image:linear-gradient(180deg,transparent 0%,#000 16%,#000 55%,transparent 100%),linear-gradient(90deg,transparent 0%,#000 10%,#000 90%,transparent 100%) !important;mask-composite:intersect}#home .info{justify-content:flex-start}.info{grid-row:3;margin-top:-21vh !important;padding-bottom:28px !important}
     .event .when{font-size:28px}.actions{margin-top:22px}.note{margin-top:12px}
-    .portrait img{inset:auto 0 0 0 !important;top:-8% !important;height:108% !important;object-position:50% 0 !important}
+    .portrait img{inset:auto 0 0 0 !important;top:0 !important;height:100% !important;object-position:50% 0 !important}
     #home .rule{display:none}
     .portrait::after{display:none !important}
     .info{padding:0 24px 48px;margin-top:-70px;position:relative}
