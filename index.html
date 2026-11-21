@@ -356,7 +356,7 @@ var grid = document.getElementById('grid'), photosLoaded = false;
 var nPhotos = 0;
 var io = 'IntersectionObserver' in window ? new IntersectionObserver(function (es) {
   es.forEach(function (e) { if (e.isIntersecting) { var i = e.target; i.src = i.dataset.src; io.unobserve(i); } });
-}, { rootMargin: '400px' }) : null;
+}, { rootMargin: '1200px' }) : null;
 function addPhoto(thumb, full, first, w, h) {
   var fig = document.createElement('figure'), img = document.createElement('img');
   var n = nPhotos++, r = w && h ? w / h : 1, k = '';
@@ -388,7 +388,7 @@ function loadPhotos(force) {
     grid.innerHTML = ''; nPhotos = 0;
     items.forEach(function (x) { addPhoto(x.thumb, x.full, false, x.w, x.h); });
     // Warm the browser cache with the first screenfuls so the Photos tab opens instantly.
-    items.slice(0, 30).forEach(function (x) { var im = new Image(); im.decoding = 'async'; im.src = x.thumb; });
+    items.slice(0, innerWidth > 860 ? 72 : 30).forEach(function (x) { var im = new Image(); im.decoding = 'async'; im.src = x.thumb; });
   });
 }
 // Date the photo was taken, from its EXIF (lost once the browser resizes it).
