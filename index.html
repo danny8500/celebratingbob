@@ -77,14 +77,22 @@
   .btn[disabled]{opacity:.5;cursor:default}
   .note{font-size:13px;color:var(--dim);margin:16px 0 0;line-height:1.6;max-width:420px}
 
+  /* desktop: name + dates in the right column, photo alone on the left */
+  .ptitle{display:none}
+  #home .mtitle{display:block;margin-bottom:6px}
+  #home .rule{display:block}
+  .portrait{top:0 !important}
+  .portrait img{object-position:50% 22% !important}
+  .portrait::after{background:linear-gradient(0deg,rgba(10,10,10,.5),rgba(10,10,10,0) 30%) !important}
   @media (max-width:860px){
     #home.on{grid-template-columns:1fr;grid-template-rows:auto auto}
     .portrait{position:relative;width:auto;height:58vh;min-height:340px;
        -webkit-mask-image:linear-gradient(180deg,transparent 0%,#000 16%,#000 55%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0%,#000 16%,#000 55%,transparent 100%)}
     .portrait::after{display:none}
     .info{grid-column:1}
-    .ptitle{position:relative;left:auto;top:auto;width:auto;grid-row:1;padding:78px 20px 0;margin-bottom:-60px;z-index:3}
+    .ptitle{display:block !important;position:relative;left:auto;top:auto;width:auto;grid-row:1;padding:78px 20px 0;margin-bottom:-60px;z-index:3}
     .ptitle .name{font-size:clamp(40px,11vw,56px)}
+    #home .mtitle{display:none}#home .rule{display:none}
     .portrait{grid-row:2;height:auto !important;aspect-ratio:1/1.05;max-height:62vh;min-height:300px !important;top:auto !important;width:min(100%,calc(62vh / 1.05)) !important;justify-self:center;-webkit-mask-image:linear-gradient(180deg,transparent 0%,#000 16%,#000 55%,transparent 100%),linear-gradient(90deg,transparent 0%,#000 10%,#000 90%,transparent 100%) !important;-webkit-mask-composite:source-in;mask-image:linear-gradient(180deg,transparent 0%,#000 16%,#000 55%,transparent 100%),linear-gradient(90deg,transparent 0%,#000 10%,#000 90%,transparent 100%) !important;mask-composite:intersect}#home .info{justify-content:flex-start}.info{grid-row:3;margin-top:-21vh !important;padding-bottom:28px !important}
     .event .when{font-size:28px}.actions{margin-top:22px}.note{margin-top:12px}
     .portrait img{inset:auto 0 0 0 !important;top:-8% !important;height:108% !important;object-position:50% 0 !important}
