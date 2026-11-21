@@ -15,7 +15,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
 <style>
   :root{--bg:#0a0a0a;--fg:#f2f2f0;--dim:#a3a3a0;--line:rgba(255,255,255,.16);--paper:#f7f6f3;--ink:#1c1c1c;--muted:#6d6d6a}
   *{box-sizing:border-box}
@@ -142,6 +142,32 @@
   .muted{color:#6d6d6a !important}
   .card-foot{text-align:center;padding:22px;border-top:1px solid #eee;font:400 12px Inter,Arial,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#8a8a86}
   @media (max-width:560px){.card-body{padding:30px 22px}.rows th{width:74px;letter-spacing:.14em}.rows td{font-size:18px}.card-name{font-size:36px}}
+  /* memories: handwritten notes */
+  #memories, #memories .page{background:var(--paper)}
+  textarea{width:100%;font:inherit;font-weight:400;font-size:16px;line-height:1.5;padding:11px 12px;border:1px solid #cfcfcb;border-radius:0;background:#fff;color:var(--ink);resize:vertical}
+  textarea:focus{outline:2px solid var(--ink);outline-offset:-1px}
+  .vis{display:flex;flex-direction:column;gap:8px}
+  .opt{display:flex;align-items:center;gap:10px;text-transform:none;letter-spacing:0;font-size:15px;color:var(--ink);cursor:pointer;margin:0}
+  .opt input{width:18px;height:18px;accent-color:#1c1c1c;margin:0}
+  .notes{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:34px 28px;max-width:1150px;margin:0 auto;padding:20px 24px 90px}
+  .note{cursor:pointer;text-align:center;background:none;border:0;padding:0;font:inherit;color:inherit}
+  .paper{position:relative;aspect-ratio:1/1.08;padding:30px 24px 22px;text-align:left;overflow:hidden;
+     background:#fffdf6 repeating-linear-gradient(180deg,transparent 0,transparent 29px,rgba(70,110,170,.13) 29px,rgba(70,110,170,.13) 30px);
+     background-position:0 22px;box-shadow:0 2px 3px rgba(0,0,0,.08),0 10px 24px rgba(0,0,0,.10);transition:transform .25s ease,box-shadow .25s ease}
+  .paper::before{content:"";position:absolute;top:-9px;left:50%;width:90px;height:22px;transform:translateX(-50%) rotate(-2deg);background:rgba(220,212,190,.75)}
+  .paper .hw{font-family:'Caveat',cursive;font-weight:500;font-size:24px;line-height:30px;color:#22324f;
+     display:-webkit-box;-webkit-line-clamp:7;-webkit-box-orient:vertical;overflow:hidden;white-space:pre-line}
+  .note:nth-child(4n+1) .paper{transform:rotate(-1.6deg)} .note:nth-child(4n+2) .paper{transform:rotate(1.2deg)}
+  .note:nth-child(4n+3) .paper{transform:rotate(-.6deg)}  .note:nth-child(4n) .paper{transform:rotate(1.8deg)}
+  .note:hover .paper{transform:rotate(0) translateY(-3px);box-shadow:0 4px 6px rgba(0,0,0,.08),0 18px 34px rgba(0,0,0,.14)}
+  .note .who{margin-top:14px;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#6d6d6a}
+  .note-full{position:relative;width:100%;max-width:640px;max-height:90vh;overflow:auto;padding:46px 44px 34px;
+     background:#fffdf6 repeating-linear-gradient(180deg,transparent 0,transparent 35px,rgba(70,110,170,.13) 35px,rgba(70,110,170,.13) 36px);
+     background-position:0 40px;box-shadow:0 20px 60px rgba(0,0,0,.4)}
+  .note-text{font-family:'Caveat',cursive;font-weight:500;font-size:29px;line-height:36px;color:#22324f;white-space:pre-line}
+  .note-by{font-family:'Caveat',cursive;font-size:28px;color:#22324f;text-align:right;margin-top:18px}
+  @media (max-width:560px){.notes{grid-template-columns:repeat(2,1fr);gap:22px 14px;padding:14px 12px 70px}.paper{padding:22px 14px 14px}
+    .paper .hw{font-size:19px;line-height:24px}.note .who{font-size:11px}.note-full{padding:36px 22px 26px}.note-text{font-size:25px;line-height:32px}}
   /* photos */
   #photos .page{background:var(--bg);color:var(--fg)}
   #photos .sub{color:var(--dim)}
@@ -185,6 +211,7 @@
     <a href="#home" data-v="home">Home</a>
     <a href="#details" data-v="details">Details</a>
     <a href="#photos" data-v="photos">Photos</a>
+    <a href="#memories" data-v="memories">Memories</a>
     <a href="#obituary" data-v="obituary">Obituary</a>
   </nav>
 </header>
@@ -212,6 +239,7 @@
     <div class="actions">
       <button class="btn fill" type="button" data-open="rsvpModal">RSVP</button>
       <button class="btn" type="button" data-open="photoModal">Add photos</button>
+      <button class="btn" type="button" data-open="memModal">Share a memory</button>
     </div>
     <p class="note">An RSVP isn’t required, but it helps us plan. Please let us know even if you only think you might come.</p>
   </div>
@@ -248,10 +276,21 @@
   <div class="page" style="padding-bottom:30px"><div class="in center">
     <h1>Photos</h1>
     <p class="sub">Have a photo of Bob? We’d love for you to add it here.</p>
-    <button class="btn fill" type="button" data-open="photoModal">Add photos</button>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap"><button class="btn fill" type="button" data-open="photoModal">Add photos</button><button class="btn" type="button" data-open="memModal">Share a memory</button></div>
   </div></div>
   <div class="grid" id="grid">
   </div>
+</section>
+
+<!-- ================= MEMORIES ================= -->
+<section class="view" id="memories">
+  <div class="page" style="padding-bottom:20px"><div class="in center">
+    <h1>Memories of Bob</h1>
+    <p class="sub">Stories and remembrances from family and friends.</p>
+    <button class="btn fill" type="button" data-open="memModal">Share a memory</button>
+  </div></div>
+  <div class="notes" id="notes"></div>
+  <p class="center" id="notesEmpty" style="display:none;color:#8a8a86;padding:10px 20px 80px">Be the first to share a memory of Bob.</p>
 </section>
 
 <!-- ================= OBITUARY ================= -->
@@ -280,7 +319,33 @@
     <div class="field"><label for="rEmail">Email</label><input type="email" id="rEmail" autocomplete="email"></div>
     <button class="btn fill" type="submit" id="rBtn">Send RSVP</button>
     <p class="msg" id="rMsg" role="status"></p>
+    <button class="btn" type="button" id="rMem" data-open="memModal" style="display:none;margin-top:6px">Share a memory of Bob</button>
   </form>
+</div>
+
+<!-- ================= Memory modal ================= -->
+<div class="modal" id="memModal" role="dialog" aria-modal="true" aria-labelledby="mT">
+  <form class="sheet" id="memForm" novalidate>
+    <button class="x" type="button" data-close aria-label="Close">&times;</button>
+    <h3 id="mT">Share a memory</h3>
+    <div class="field"><label for="mName">Your name</label><input type="text" id="mName" autocomplete="name"></div>
+    <div class="field"><label for="mText">Your memory of Bob</label><textarea id="mText" rows="7" maxlength="4000"></textarea></div>
+    <div class="field vis">
+      <label class="opt"><input type="radio" name="mVis" value="public" checked> <span>Share it on this site</span></label>
+      <label class="opt"><input type="radio" name="mVis" value="family"> <span>Just for the family</span></label>
+    </div>
+    <button class="btn fill" type="submit" id="mBtn">Share memory</button>
+    <p class="msg" id="mMsg" role="status"></p>
+  </form>
+</div>
+
+<!-- ================= Note viewer ================= -->
+<div class="modal" id="noteModal" role="dialog" aria-modal="true">
+  <div class="note-full">
+    <button class="x" type="button" data-close aria-label="Close">&times;</button>
+    <div class="note-text" id="nvText"></div>
+    <div class="note-by" id="nvBy"></div>
+  </div>
 </div>
 
 <!-- ================= Photo modal ================= -->
@@ -304,7 +369,7 @@
 var ENDPOINT = 'https://script.google.com/macros/s/AKfycbxHZUaKoPdcI2KJq2LzoYutxGa2pz6WHH2sCo5xUdu_PR3FZe9gNd827EGJ3_tN_JkKeQ/exec';
 
 // ---------- views (hash routing) ----------
-var VIEWS = ['home', 'details', 'photos', 'obituary'];
+var VIEWS = ['home', 'details', 'photos', 'memories', 'obituary'];
 function show() {
   var v = location.hash.slice(1); if (VIEWS.indexOf(v) < 0) v = 'home';
   document.body.setAttribute('data-v', v);
@@ -312,6 +377,7 @@ function show() {
   document.querySelectorAll('.tabs a').forEach(function (a) { a.classList.toggle('on', a.dataset.v === v); });
   window.scrollTo(0, 0);
   if (v === 'photos') loadPhotos();
+  if (v === 'memories') loadMemories();
 }
 
 // ---------- modals ----------
@@ -345,6 +411,8 @@ function say(el, text, kind) { el.textContent = text; el.className = 'msg ' + (k
     post(d).then(function (r) {
       if (r.error) throw new Error(r.error);
       localStorage.setItem('cb-rsvp', JSON.stringify(d)); btn.textContent = 'Update RSVP';
+      document.getElementById('rMem').style.display = 'inline-flex';
+      if (!mName.value) mName.value = d.name;
       say(msg, r.updated ? 'Your RSVP has been updated. Thank you!' : 'Thank you, ' + d.name.split(' ')[0] + '. We look forward to seeing you.', 'ok');
     }).catch(function (err) { say(msg, (err && err.message) || 'Something went wrong. Please try again.', 'err'); })
       .finally(function () { btn.disabled = false; });
@@ -450,6 +518,47 @@ function exifDate(file) {
     pick.disabled = false; file.value = ''; count.textContent = '';
     if (done) { if (photosLoaded) loadPhotos(true); say(msg, 'Thank you! ' + done + (done === 1 ? ' photo' : ' photos') + ' added. See them on the Photos page.', 'ok'); }
   };
+})();
+
+
+// ---------- Memories ----------
+var mName = document.getElementById('mName'), memLoaded = false;
+function escH(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+function loadMemories(force) {
+  if (memLoaded && !force) return; memLoaded = true;
+  fetch(ENDPOINT + '?memories=1&v=' + Date.now()).then(function (r) { return r.json(); }).then(function (d) {
+    var box = document.getElementById('notes'), list = d.memories || [];
+    document.getElementById('notesEmpty').style.display = list.length ? 'none' : 'block';
+    box.innerHTML = list.map(function (m, i) {
+      return '<button class="note" type="button" data-i="' + i + '"><div class="paper"><div class="hw">' + escH(m.text) +
+        '</div></div><div class="who">' + escH(m.name) + '</div></button>';
+    }).join('');
+    box.onclick = function (e) {
+      var n = e.target.closest('.note'); if (!n) return; var m = list[+n.dataset.i];
+      document.getElementById('nvText').textContent = m.text;
+      document.getElementById('nvBy').textContent = '\u2014 ' + m.name;
+      openModal('noteModal');
+    };
+  }).catch(function () { memLoaded = false; });
+}
+(function () {
+  var f = document.getElementById('memForm'), msg = document.getElementById('mMsg'), btn = document.getElementById('mBtn'), txt = document.getElementById('mText');
+  try { var r = JSON.parse(localStorage.getItem('cb-rsvp') || 'null'); if (r && r.name) mName.value = r.name; } catch (e) {}
+  f.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var vis = (f.querySelector('input[name=mVis]:checked') || {}).value || 'public';
+    var d = { type: 'memory', name: mName.value.trim(), text: txt.value.trim(), visibility: vis };
+    if (!d.name) return say(msg, 'Please enter your name.', 'err');
+    if (d.text.length < 3) return say(msg, 'Please write your memory.', 'err');
+    btn.disabled = true; say(msg, 'Sending\u2026');
+    post(d).then(function (r) {
+      if (r.error) throw new Error(r.error);
+      txt.value = '';
+      say(msg, vis === 'public' ? 'Thank you for sharing. Your memory now appears on the Memories page.' : 'Thank you. Your memory has been sent to the family.', 'ok');
+      if (vis === 'public') loadMemories(true);
+    }).catch(function (err) { say(msg, (err && err.message) || 'Something went wrong. Please try again.', 'err'); })
+      .finally(function () { btn.disabled = false; });
+  });
 })();
 
 // ---------- Lightbox ----------
