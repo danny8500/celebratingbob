@@ -40,8 +40,8 @@
   /* home: everything on one screen */
   #home.on{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);min-height:100vh;position:relative}
   .portrait{position:absolute;top:0;bottom:0;left:max(0px,calc(58% - 100vh));width:min(58%,100vh);overflow:hidden;
-     -webkit-mask-image:linear-gradient(90deg,rgba(0,0,0,.3) 0%,#000 14%,#000 40%,rgba(0,0,0,.8) 52%,rgba(0,0,0,.55) 64%,rgba(0,0,0,.32) 76%,rgba(0,0,0,.14) 88%,transparent 100%);
-             mask-image:linear-gradient(90deg,rgba(0,0,0,.3) 0%,#000 14%,#000 40%,rgba(0,0,0,.8) 52%,rgba(0,0,0,.55) 64%,rgba(0,0,0,.32) 76%,rgba(0,0,0,.14) 88%,transparent 100%)}
+     -webkit-mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.45) 7%,#000 20%,#000 40%,rgba(0,0,0,.8) 52%,rgba(0,0,0,.55) 64%,rgba(0,0,0,.32) 76%,rgba(0,0,0,.14) 88%,transparent 100%);
+             mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.45) 7%,#000 20%,#000 40%,rgba(0,0,0,.8) 52%,rgba(0,0,0,.55) 64%,rgba(0,0,0,.32) 76%,rgba(0,0,0,.14) 88%,transparent 100%)}
   .portrait img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 18%;filter:grayscale(1) contrast(1.06) brightness(.92)}
   .portrait::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(10,10,10,.6),rgba(10,10,10,0) 35%)}
   .info{grid-column:2;position:relative;z-index:1}
@@ -83,7 +83,7 @@
   #home .rule{display:block}
   .portrait{top:0 !important}
   .portrait img{object-position:50% 22% !important}
-  .portrait::after{background:linear-gradient(0deg,rgba(10,10,10,.5),rgba(10,10,10,0) 30%) !important}
+  .portrait::after{background:linear-gradient(180deg,rgba(10,10,10,.7),rgba(10,10,10,0) 16%),linear-gradient(0deg,rgba(10,10,10,.5),rgba(10,10,10,0) 30%) !important}
   @media (max-width:860px){
     #home.on{grid-template-columns:1fr;grid-template-rows:auto auto}
     .portrait{position:relative;width:auto;height:58vh;min-height:340px;
